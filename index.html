@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EUGISCHW — Freelance Creativa Multimedia</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #000000;
+    --green: #00ff88;
+    --green-dim: #00cc6a;
+    --green-dark: #003322;
+    --white: #f0f0f0;
+    --gray: #888888;
+    --gray-dark: #1a1a1a;
+    --glitch-red: #ff003c;
+    --glitch-blue: #00d4ff;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    background: var(--green);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-trail {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--green);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+    opacity: 0.5;
+  }
+
+  /* SCANLINES */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,255,136,0.015) 2px,
+      rgba(0,255,136,0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* NOISE OVERLAY */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: 99;
+    animation: noise-shift 0.5s steps(2) infinite;
+  }
+
+  @keyframes noise-shift {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(-2px, 1px); }
+    50% { transform: translate(1px, -2px); }
+    75% { transform: translate(-1px, 2px); }
+    100% { transform: translate(2px, -1px); }
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,255,136,0.1);
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--green);
+    letter-spacing: 4px;
+    text-decoration: none;
+    position: relative;
+  }
+
+  .nav-logo::before {
+    content: 'EUGISCHW';
+    position: absolute;
+    top: 0; left: 0;
+    color: var(--glitch-red);
+    clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+    animation: glitch-logo 4s infinite;
+    opacity: 0;
+  }
+
+  @keyframes glitch-logo {
+    0%, 90%, 100% { opacity: 0; transform: translate(0); }
+    92% { opacity: 1; transform: translate(-3px, 0); }
+    94% { opacity: 1; transform: translate(3px, 0); clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%); }
+    96% { opacity: 0; }
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gray);
+    text-decoration: none;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--green);
+    transition: width 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--green); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* HERO */
+  #inicio {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: grid-scroll 20s linear infinite;
+  }
+
+  @keyframes grid-scroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 60px; }
+  }
+
+  .hero-corner {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-color: var(--green);
+    border-style: solid;
+    opacity: 0.4;
+  }
+  .corner-tl { top: 100px; left: 30px; border-width: 1px 0 0 1px; }
+  .corner-tr { top: 100px; right: 30px; border-width: 1px 1px 0 0; }
+  .corner-bl { bottom: 30px; left: 30px; border-width: 0 0 1px 1px; }
+  .corner-br { bottom: 30px; right: 30px; border-width: 0 1px 1px 0; }
+
+  .hero-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--green);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 1s ease 0.2s both;
+  }
+
+  .hero-tag::before {
+    content: '> ';
+    color: var(--green-dim);
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 15vw, 14rem);
+    line-height: 0.85;
+    letter-spacing: -2px;
+    position: relative;
+    animation: fadeInUp 1s ease 0.4s both;
+  }
+
+  .hero-title .line-1 { color: var(--white); display: block; }
+  .hero-title .line-2 {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--green);
+    display: block;
+    position: relative;
+  }
+
+  .glitch-text {
+    position: relative;
+    display: inline-block;
+  }
+
+  .glitch-text::before,
+  .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+
+  .glitch-text::before {
+    color: var(--glitch-red);
+    -webkit-text-stroke: 0;
+    animation: glitch-1 3s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  }
+
+  .glitch-text::after {
+    color: var(--glitch-blue);
+    -webkit-text-stroke: 0;
+    animation: glitch-2 3s infinite;
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  }
+
+  @keyframes glitch-1 {
+    0%, 85%, 100% { opacity: 0; transform: translate(0); }
+    87% { opacity: 0.8; transform: translate(-4px, 0); }
+    89% { opacity: 0.8; transform: translate(4px, 0); }
+    91% { opacity: 0; }
+  }
+
+  @keyframes glitch-2 {
+    0%, 85%, 100% { opacity: 0; transform: translate(0); }
+    88% { opacity: 0.8; transform: translate(4px, 0); }
+    90% { opacity: 0.8; transform: translate(-4px, 0); }
+    92% { opacity: 0; }
+  }
+
+  .hero-subtitle {
+    margin-top: 2rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--gray);
+    letter-spacing: 3px;
+    max-width: 600px;
+    line-height: 2;
+    animation: fadeInUp 1s ease 0.6s both;
+  }
+
+  .hero-services-strip {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeInUp 1s ease 0.8s both;
+  }
+
+  .service-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green);
+    border: 1px solid var(--green);
+    padding: 0.3rem 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+  }
+
+  .service-tag:hover {
+    background: var(--green);
+    color: var(--black);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeInUp 1s ease 1s both;
+  }
+
+  .hero-scroll span {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--gray);
+    letter-spacing: 3px;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--green), transparent);
+    animation: scroll-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-pulse {
+    0%, 100% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+  }
+
+  /* YO SOY SECTION */
+  #eugi {
+    padding: 6rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::before { content: '//'; color: var(--gray); }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(0,255,136,0.2);
+  }
+
+  .yo-soy-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .yo-soy-list li {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 3px;
+    color: var(--gray);
+    transition: all 0.3s;
+    cursor: default;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .yo-soy-list li::before {
+    content: '_';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .yo-soy-list li:hover {
+    color: var(--white);
+    padding-left: 2rem;
+  }
+
+  .yo-soy-list li:hover::before { opacity: 1; }
+
+  .eugi-quote {
+    padding: 2rem;
+    border-left: 2px solid var(--green);
+    background: rgba(0,255,136,0.03);
+    position: relative;
+  }
+
+  .eugi-quote::before {
+    content: '"';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 8rem;
+    color: var(--green);
+    opacity: 0.15;
+    position: absolute;
+    top: -1rem;
+    left: 1rem;
+    line-height: 1;
+  }
+
+  .eugi-quote p {
+    font-size: 0.8rem;
+    line-height: 2;
+    color: var(--gray);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  .eugi-quote cite {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--green);
+    letter-spacing: 2px;
+    font-style: normal;
+  }
+
+  /* PHOTO PLACEHOLDER */
+  .photo-placeholder {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--gray-dark);
+    border: 1px solid rgba(0,255,136,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .photo-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 10px,
+      rgba(0,255,136,0.03) 10px,
+      rgba(0,255,136,0.03) 20px
+    );
+  }
+
+  .photo-placeholder span {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gray);
+    letter-spacing: 2px;
+    z-index: 1;
+  }
+
+  /* SERVICIOS */
+  #servicios {
+    padding: 6rem 2rem;
+    background: linear-gradient(180deg, transparent, rgba(0,255,136,0.02), transparent);
+  }
+
+  .servicios-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .servicios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    border: 1px solid rgba(0,255,136,0.15);
+    margin-top: 3rem;
+  }
+
+  .servicio-card {
+    padding: 2.5rem 2rem;
+    border: 1px solid rgba(0,255,136,0.1);
+    background: var(--black);
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .servicio-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(0,255,136,0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .servicio-card:hover::before { opacity: 1; }
+  .servicio-card:hover { border-color: rgba(0,255,136,0.4); }
+
+  .servicio-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--green);
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
+    opacity: 0.6;
+  }
+
+  .servicio-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    color: var(--white);
+  }
+
+  .servicio-desc {
+    font-size: 0.7rem;
+    color: var(--gray);
+    line-height: 2;
+    letter-spacing: 1px;
+  }
+
+  .servicio-arrow {
+    margin-top: 2rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--green);
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.4s;
+  }
+
+  .servicio-card:hover .servicio-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* PORTFOLIO */
+  #portfolio {
+    padding: 6rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto;
+    gap: 4px;
+    margin-top: 3rem;
+  }
+
+  .port-item {
+    background: var(--gray-dark);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .port-item:nth-child(1) { grid-column: span 7; aspect-ratio: 16/9; }
+  .port-item:nth-child(2) { grid-column: span 5; aspect-ratio: 4/3; }
+  .port-item:nth-child(3) { grid-column: span 4; aspect-ratio: 1; }
+  .port-item:nth-child(4) { grid-column: span 4; aspect-ratio: 1; }
+  .port-item:nth-child(5) { grid-column: span 4; aspect-ratio: 1; }
+  .port-item:nth-child(6) { grid-column: span 6; aspect-ratio: 3/2; }
+  .port-item:nth-child(7) { grid-column: span 6; aspect-ratio: 3/2; }
+
+  .port-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 15px,
+      rgba(0,255,136,0.02) 15px,
+      rgba(0,255,136,0.02) 30px
+    );
+  }
+
+  .port-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.4s;
+    border: 1px solid var(--green);
+  }
+
+  .port-item:hover .port-overlay { opacity: 1; }
+
+  .port-overlay h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 3px;
+    color: var(--green);
+  }
+
+  .port-overlay p {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--gray);
+    letter-spacing: 2px;
+    margin-top: 0.3rem;
+  }
+
+  .port-placeholder-num {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: rgba(0,255,136,0.1);
+    z-index: 0;
+  }
+
+  /* HITOS TIMELINE */
+  .hitos-section {
+    padding: 6rem 2rem;
+    background: rgba(0,255,136,0.02);
+  }
+
+  .hitos-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .timeline {
+    position: relative;
+    margin-top: 3rem;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--green), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    padding: 1.5rem 0 1.5rem 3rem;
+    border-bottom: 1px solid rgba(0,255,136,0.08);
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.6s ease;
+  }
+
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -5px;
+    top: 2rem;
+    width: 10px;
+    height: 10px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--green);
+  }
+
+  .timeline-year {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green);
+    letter-spacing: 3px;
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    color: var(--white);
+  }
+
+  .timeline-desc {
+    font-size: 0.7rem;
+    color: var(--gray);
+    line-height: 1.8;
+    margin-top: 0.5rem;
+    letter-spacing: 1px;
+  }
+
+  /* ESTUDIOS */
+  .estudios-section {
+    padding: 6rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .estudios-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1px;
+    margin-top: 3rem;
+    border: 1px solid rgba(0,255,136,0.1);
+  }
+
+  .estudio-year {
+    padding: 1.5rem;
+    border: 1px solid rgba(0,255,136,0.08);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    color: var(--gray);
+    text-align: center;
+    transition: all 0.3s;
+    cursor: default;
+  }
+
+  .estudio-year:hover {
+    background: rgba(0,255,136,0.05);
+    color: var(--green);
+    border-color: rgba(0,255,136,0.3);
+  }
+
+  /* SHABONO */
+  .shabono-section {
+    padding: 6rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shabono-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .shabono-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    letter-spacing: 5px;
+    line-height: 1;
+    position: relative;
+  }
+
+  .shabono-title span {
+    color: var(--green);
+  }
+
+  .shabono-subtitle {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green);
+    letter-spacing: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .shabono-desc {
+    font-size: 0.75rem;
+    color: var(--gray);
+    line-height: 2;
+    margin-top: 1.5rem;
+  }
+
+  .shabono-types {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .shabono-type {
+    padding: 1rem;
+    border: 1px solid rgba(0,255,136,0.2);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .shabono-type:hover {
+    background: rgba(0,255,136,0.05);
+    border-color: var(--green);
+  }
+
+  .shabono-visual {
+    position: relative;
+    aspect-ratio: 1;
+    border: 1px solid rgba(0,255,136,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .shabono-hex {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10rem;
+    color: rgba(0,255,136,0.05);
+    position: absolute;
+    letter-spacing: -5px;
+    animation: rotate-slow 30s linear infinite;
+  }
+
+  @keyframes rotate-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .shabono-center {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--green);
+    letter-spacing: 10px;
+    text-align: center;
+    z-index: 1;
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { text-shadow: 0 0 10px var(--green); }
+    50% { text-shadow: 0 0 30px var(--green), 0 0 60px var(--green); }
+  }
+
+  /* CONTACTO */
+  #contacto {
+    padding: 6rem 2rem;
+    background: linear-gradient(180deg, transparent, rgba(0,255,136,0.03));
+  }
+
+  .contacto-inner {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .contacto-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    letter-spacing: 5px;
+    line-height: 0.9;
+    margin-bottom: 3rem;
+  }
+
+  .contacto-title span {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--green);
+  }
+
+  .form-group {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(0,255,136,0.3);
+    padding: 1rem 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.3s;
+    letter-spacing: 1px;
+  }
+
+  .form-group textarea {
+    height: 120px;
+    resize: none;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-bottom-color: var(--green);
+  }
+
+  .form-group label {
+    position: absolute;
+    top: 1rem; left: 0;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gray);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+
+  .form-group input:focus + label,
+  .form-group input:not(:placeholder-shown) + label,
+  .form-group textarea:focus + label,
+  .form-group textarea:not(:placeholder-shown) + label {
+    top: -0.5rem;
+    font-size: 0.55rem;
+    color: var(--green);
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: transparent; }
+
+  .btn-submit {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 5px;
+    color: var(--black);
+    background: var(--green);
+    border: none;
+    padding: 1rem 3rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-submit::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: rgba(255,255,255,0.2);
+    transition: left 0.3s;
+  }
+
+  .btn-submit:hover::before { left: 100%; }
+  .btn-submit:hover { box-shadow: 0 0 20px var(--green); }
+
+  /* SOCIAL + FOOTER */
+  footer {
+    padding: 3rem 2rem;
+    border-top: 1px solid rgba(0,255,136,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--gray);
+    letter-spacing: 2px;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .social-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gray);
+    text-decoration: none;
+    letter-spacing: 2px;
+    transition: color 0.3s;
+  }
+
+  .social-links a:hover { color: var(--green); }
+
+  /* GLITCH HORIZONTAL LINE */
+  .glitch-divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(0,255,136,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glitch-divider::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+    animation: scan-line 4s ease-in-out infinite;
+  }
+
+  @keyframes scan-line {
+    0% { left: -100%; }
+    100% { left: 200%; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    #eugi { grid-template-columns: 1fr; }
+    .shabono-inner { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .portfolio-grid { grid-template-columns: 1fr 1fr; }
+    .port-item { grid-column: span 1 !important; }
+    .estudios-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#inicio" class="nav-logo">EUGISCHW</a>
+  <ul class="nav-links">
+    <li><a href="#inicio">INICIO</a></li>
+    <li><a href="#eugi">EUGI</a></li>
+    <li><a href="#servicios">SERVICIOS</a></li>
+    <li><a href="#portfolio">PORTFOLIO</a></li>
+    <li><a href="#contacto">CONTACTO</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="inicio">
+  <div class="hero-grid"></div>
+  <div class="corner-tl hero-corner"></div>
+  <div class="corner-tr hero-corner"></div>
+  <div class="corner-bl hero-corner"></div>
+  <div class="corner-br hero-corner"></div>
+
+  <div class="hero-tag">#FREELANCE CREATIVA MULTIMEDIA</div>
+
+  <h1 class="hero-title">
+    <span class="line-1">EUGI</span>
+    <span class="line-2">
+      <span class="glitch-text" data-text="SCHW">SCHW</span>
+    </span>
+  </h1>
+
+  <p class="hero-subtitle">
+    Content Creation &nbsp;|&nbsp; Fotografía &nbsp;|&nbsp; Filmmaking<br>
+    Comunicación Integral &nbsp;|&nbsp; Creatividad Multimedia &nbsp;|&nbsp; Experiencias
+  </p>
+
+  <div class="hero-services-strip">
+    <span class="service-tag">Fotografía</span>
+    <span class="service-tag">Filmmaking</span>
+    <span class="service-tag">Content</span>
+    <span class="service-tag">Multimedia</span>
+    <span class="service-tag">Experiencias</span>
+  </div>
+
+  <div class="hero-scroll">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<div class="glitch-divider"></div>
+
+<!-- EUGI / YO SOY -->
+<section id="eugi">
+  <div>
+    <div class="section-label reveal">SOBRE MÍ</div>
+    <ul class="yo-soy-list">
+      <li class="reveal" style="transition-delay: 0.1s">Artista</li>
+      <li class="reveal" style="transition-delay: 0.15s">Creativa</li>
+      <li class="reveal" style="transition-delay: 0.2s">Diseñadora</li>
+      <li class="reveal" style="transition-delay: 0.25s">Yogui</li>
+      <li class="reveal" style="transition-delay: 0.3s">Hermética</li>
+      <li class="reveal" style="transition-delay: 0.35s">Bruja Verde</li>
+      <li class="reveal" style="transition-delay: 0.4s">Guardiana del Fuego</li>
+      <li class="reveal" style="transition-delay: 0.45s">Nómade</li>
+      <li class="reveal" style="transition-delay: 0.5s">Ciudadana del Mundo</li>
+    </ul>
+  </div>
+
+  <div class="reveal">
+    <div class="photo-placeholder" style="margin-bottom: 2rem;">
+      <span>[FOTO]</span>
+    </div>
+    <div class="eugi-quote">
+      <p>¿Y si no estoy aceptando? Estoy CREANDO. Soy inquieta. La energía me corre. El fuego se enciende con eso que me demuestra que si y solo si YO=NO YO no me identifico "o esto o no-esto". Soy. Creo como me presento. Lo que toco. Lo que muevo. Lo que expando.</p>
+      <cite>— MARIA EUGENIA SCHWEINHEIM</cite>
+    </div>
+  </div>
+</section>
+
+<div class="glitch-divider"></div>
+
+<!-- SERVICIOS -->
+<section id="servicios">
+  <div class="servicios-inner">
+    <div class="section-label reveal">MIS SERVICIOS</div>
+    <div class="servicios-grid">
+      <div class="servicio-card reveal">
+        <div class="servicio-num">01 //</div>
+        <div class="servicio-title">Diseño & Pre-Producción</div>
+        <div class="servicio-desc">Conceptualización, dirección de arte, storyboard, planificación creativa integral para proyectos audiovisuales y multimedia.</div>
+        <div class="servicio-arrow">→ VER MÁS</div>
+      </div>
+      <div class="servicio-card reveal" style="transition-delay: 0.1s">
+        <div class="servicio-num">02 //</div>
+        <div class="servicio-title">Realización</div>
+        <div class="servicio-desc">Fotografía, filmmaking, dirección, producción en set. Captura de momentos únicos con visión artística y técnica.</div>
+        <div class="servicio-arrow">→ VER MÁS</div>
+      </div>
+      <div class="servicio-card reveal" style="transition-delay: 0.2s">
+        <div class="servicio-num">03 //</div>
+        <div class="servicio-title">Post-Producción</div>
+        <div class="servicio-desc">Edición, colorización, retoque fotográfico, montaje de video, motion graphics y entrega final de materiales.</div>
+        <div class="servicio-arrow">→ VER MÁS</div>
+      </div>
+      <div class="servicio-card reveal" style="transition-delay: 0.3s">
+        <div class="servicio-num">04 //</div>
+        <div class="servicio-title">Asistencias</div>
+        <div class="servicio-desc">Apoyo técnico y creativo en producciones externas. Disponible para proyectos de moda, publicidad, cultura y eventos.</div>
+        <div class="servicio-arrow">→ VER MÁS</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glitch-divider"></div>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="section-label reveal">PORTFOLIO</div>
+  <div class="portfolio-grid">
+    <div class="port-item">
+      <div class="port-placeholder-num">01</div>
+      <div class="port-overlay">
+        <h3>FASHION WEEK</h3>
+        <p>FOTOGRAFÍA — MODA</p>
+      </div>
+    </div>
+    <div class="port-item">
+      <div class="port-placeholder-num">02</div>
+      <div class="port-overlay">
+        <h3>FILMMAKING</h3>
+        <p>PRODUCCIÓN AUDIOVISUAL</p>
+      </div>
+    </div>
+    <div class="port-item">
+      <div class="port-placeholder-num">03</div>
+      <div class="port-overlay">
+        <h3>RETRATO</h3>
+        <p>FOTOGRAFÍA</p>
+      </div>
+    </div>
+    <div class="port-item">
+      <div class="port-placeholder-num">04</div>
+      <div class="port-overlay">
+        <h3>EDITORIAL</h3>
+        <p>CONTENT CREATION</p>
+      </div>
+    </div>
+    <div class="port-item">
+      <div class="port-placeholder-num">05</div>
+      <div class="port-overlay">
+        <h3>EVENTOS</h3>
+        <p>COBERTURA CULTURAL</p>
+      </div>
+    </div>
+    <div class="port-item">
+      <div class="port-placeholder-num">06</div>
+      <div class="port-overlay">
+        <h3>SANTA EVITA</h3>
+        <p>STAR+ — EDICIÓN</p>
+      </div>
+    </div>
+    <div class="port-item">
+      <div class="port-placeholder-num">07</div>
+      <div class="port-overlay">
+        <h3>JJOO '24</h3>
+        <p>EDICIÓN — DEPORTE</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glitch-divider"></div>
+
+<!-- ESTUDIOS -->
+<section class="estudios-section">
+  <div class="section-label reveal">MIS ESTUDIOS</div>
+  <div class="estudios-grid reveal">
+    <div class="estudio-year">2012</div>
+    <div class="estudio-year">2013</div>
+    <div class="estudio-year">2014</div>
+    <div class="estudio-year">2015</div>
+    <div class="estudio-year">2016</div>
+    <div class="estudio-year">2017</div>
+    <div class="estudio-year">2018</div>
+    <div class="estudio-year">2019</div>
+    <div class="estudio-year">2020</div>
+    <div class="estudio-year">2021</div>
+    <div class="estudio-year">2022</div>
+    <div class="estudio-year">2023</div>
+    <div class="estudio-year">2024</div>
+    <div class="estudio-year">2025</div>
+    <div class="estudio-year" style="grid-column: span 2; color: var(--green);">+ MÁS</div>
+  </div>
+
+  <div class="eugi-quote reveal" style="margin-top: 3rem; max-width: 700px;">
+    <p>"El porvenir es tan irrevocable como el rígido ayer. No hay una cosa que no sea una letra silenciosa de la eterna escritura indescifrable, cuyo libro es el tiempo."</p>
+    <cite>— Jorge Luis Borges: Para una versión del «I King»</cite>
+  </div>
+</section>
+
+<div class="glitch-divider"></div>
+
+<!-- HITOS LABORALES -->
+<section class="hitos-section">
+  <div class="hitos-inner">
+    <div class="section-label reveal">HITOS LABORALES</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2018 — 2019</div>
+        <div class="timeline-title">POGO CREATIVE CO.</div>
+        <div class="timeline-desc">Temporadas FW18 / SS19 / FW19 / SS20 / FW20. Fotografía de moda y dirección de arte.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2016 — 2017</div>
+        <div class="timeline-title">BAFWEEK</div>
+        <div class="timeline-desc">FW19/SS20/FW20/SS21/FW21/SS22/FW22/SS23/FW23/SS24. Cobertura fotográfica de semanas de la moda.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">AGO 2022</div>
+        <div class="timeline-title">STAR+ — SANTA EVITA</div>
+        <div class="timeline-desc">Apoyo en rueda de prensa. Edición y producción audiovisual para la serie.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">DIC 2022 — MAY 2023</div>
+        <div class="timeline-title">JJOO PARIS '24</div>
+        <div class="timeline-desc">Apoyo al equipo de edición para los Juegos Olímpicos de París 2024.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">DESDE 2018</div>
+        <div class="timeline-title">PROYECTOS PROPIOS</div>
+        <div class="timeline-desc">Desarrollo de proyectos creativos independientes, dirección de arte y producción multimedia.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glitch-divider"></div>
+
+<!-- SHABONO -->
+<section class="shabono-section">
+  <div class="shabono-inner">
+    <div class="reveal">
+      <div class="shabono-subtitle">// GESTIÓN CULTURAL</div>
+      <div class="shabono-title">SHA<span>BONO</span></div>
+      <p class="shabono-desc">
+        <strong style="color: var(--green);">SHABONO es un BUNKER CULTURAL.</strong><br><br>
+        Espacio-Tiempo Sagrado & Mutante abierto para crear & experimentar la cultura del ahora.<br><br>
+        Proveer recursos, herramientas y experiencias para expandir y materializar la creatividad de jóvenes artistes, diseñadores & amantes de la cultura humana.
+      </p>
+      <div class="shabono-types">
+        <div class="shabono-type">ESTUDIO DE FOTOGRAFÍA</div>
+        <div class="shabono-type">COWORKING</div>
+        <div class="shabono-type">TALLER MULTIMEDIAL</div>
+        <div class="shabono-type">BUNKER CULTURAL</div>
+      </div>
+      <p style="margin-top: 1.5rem; font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--gray); line-height: 2; letter-spacing: 1px;">
+        Beca Sostener Cultura II — Fondo Nacional de las Artes, 2020.<br>
+        Proyecto actualmente pausado por falta de fondos.
+      </p>
+    </div>
+    <div class="shabono-visual reveal">
+      <div class="shabono-hex">SHABONO</div>
+      <div class="shabono-center">SHB</div>
+    </div>
+  </div>
+</section>
+
+<div class="glitch-divider"></div>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="contacto-inner">
+    <div class="section-label reveal">CONTACTO</div>
+    <div class="contacto-title reveal">
+      CONTAME<br>TU <span>PROYECTO</span>
+    </div>
+    <form class="reveal" onsubmit="return false;">
+      <div class="form-group">
+        <input type="text" id="nombre" placeholder="Nombre">
+        <label for="nombre">NOMBRE</label>
+      </div>
+      <div class="form-group">
+        <input type="email" id="email" placeholder="E-mail">
+        <label for="email">E-MAIL</label>
+      </div>
+      <div class="form-group">
+        <input type="tel" id="celular" placeholder="Celular">
+        <label for="celular">CELULAR</label>
+      </div>
+      <div class="form-group">
+        <textarea id="mensaje" placeholder="Mensaje"></textarea>
+        <label for="mensaje">MENSAJE</label>
+      </div>
+      <button class="btn-submit" type="submit">ENVIAR →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">EUGI SCHW ALL RIGHTS RESERVED — DISEÑO DIGITAL</div>
+  <div class="social-links">
+    <a href="#">@EUGESCHW</a>
+    <a href="#">@EUGESCHW</a>
+  </div>
+</footer>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const trail = document.getElementById('cursorTrail');
+  let mx = 0, my = 0, tx = 0, ty = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top = my - 6 + 'px';
+  });
+
+  function animateTrail() {
+    tx += (mx - tx) * 0.12;
+    ty += (my - ty) *.12;
+    trail.style.left = tx - 15 + 'px';
+    trail.style.top = ty - 15 + 'px';
+    requestAnimationFrame(animateTrail);
+  }
+  animateTrail();
+
+  document.querySelectorAll('a, button, .servicio-card, .port-item, .estudio-year').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2.5)';
+      trail.style.transform = 'scale(1.5)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      trail.style.transform = 'scale(1)';
+    });
+  });
+
+  // SCROLL REVEAL
+  const reveals = document.querySelectorAll('.reveal, .timeline-item');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // GLITCH EFFECT ON HOVER for section labels
+  document.querySelectorAll('.yo-soy-list li').forEach(li => {
+    li.addEventListener('mouseenter', () => {
+      li.style.textShadow = `2px 0 ${getComputedStyle(document.documentElement).getPropertyValue('--glitch-red')}, -2px 0 ${getComputedStyle(document.documentElement).getPropertyValue('--glitch-blue')}`;
+      setTimeout(() => li.style.textShadow = '', 150);
+    });
+  });
+
+  // TYPING EFFECT for hero tag
+  const tag = document.querySelector('.hero-tag');
+  const originalText = '#FREELANCE CREATIVA MULTIMEDIA';
+  let i = 0;
+  tag.textContent = '';
+
+  function typeWriter() {
+    if (i < originalText.length) {
+      tag.textContent += originalText.charAt(i);
+      i++;
+      setTimeout(typeWriter, 50);
+    }
+  }
+  setTimeout(typeWriter, 500);
+
+  // NAV active state
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--green)' : '';
+    });
+  });
+</script>
+</body>
+</html>
